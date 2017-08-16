@@ -1,0 +1,3 @@
+[submodule "enterprise-3.3"]
+	path = enterprise-3.3
+	url = https://github.com/goodrain/acp-install.git
