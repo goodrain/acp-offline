@@ -1,5 +1,27 @@
 # 云帮（ACP）离线自动化安装程序
 
+## 零、下载离线安装包
+
+### 0.1 下载离线安装脚本
+
+```bash
+git clone https://github.com/goodrain/acp-offline.git
+```
+
+
+
+### 0.2 下载镜像及安装包
+
+```bash
+cd acp-offline
+./tools/oss_download.sh
+
+# 下载完成后，acp-offline 会多出
+# acpimg 和 repo 目录
+```
+
+
+
 ## 一、安装管理节点
 
 ### 1.1 准备工作（重要）
@@ -92,6 +114,40 @@ Load images? (y|n):y
 
 
 ## 三、导入常用应用镜像
+
+### 3.1 先导入镜像相关的sql数据
+
+```bash
+./modules/acp_db/sql/import_sql.sh
+```
+
+### 3.2 导入应用镜像
+
+```bash
+cd appimg
+
+# 这个目录都是云市的应用，请根据需要载入镜像，下面演示载入 redis 镜像的方式
+cat redis_2.8_latest.gz | docker load
+7bd83cd74630: Loading layer [==================================================>]  89.96MB/89.96MB
+c21dce5daf56: Loading layer [==================================================>]  3.072kB/3.072kB
+746584cb6ef2: Loading layer [==================================================>]  840.7kB/840.7kB
+8d73285dfb30: Loading layer [==================================================>]  78.85kB/78.85kB
+5f70bf18a086: Loading layer [==================================================>]  1.024kB/1.024kB
+adb554e8a8c3: Loading layer [==================================================>]  840.7kB/840.7kB
+b98f86b543fc: Loading layer [==================================================>]   14.9MB/14.9MB
+74d4af4bc485: Loading layer [==================================================>]  131.1kB/131.1kB
+92d565a5ef3c: Loading layer [==================================================>]  2.703MB/2.703MB
+7c51b258e593: Loading layer [==================================================>]  23.46MB/23.46MB
+5e8970990afa: Loading layer [==================================================>]  3.584kB/3.584kB
+a94d90ca831e: Loading layer [==================================================>]  1.536kB/1.536kB
+Loaded image: goodrain.me/redis:2.8_latest    # 注意这一行
+
+# 将镜像推送到本地docker仓库
+docker push goodrain.me/redis:2.8_latest 
+
+# 其他计算节点拉取镜像
+docker pull goodrain.me/redis:2.8_latest 
+```
 
 
 
