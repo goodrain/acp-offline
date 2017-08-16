@@ -57,15 +57,15 @@ function compute_opt(){
 #====== main ========
 case $1 in 
 manage)
-  public_opt
-  manage_opt
-  $PWD/install/init/install.sh local
-  $PWD/tools/post_install.sh
+  public_opt \
+  && manage_opt \
+  && $PWD/install/init/install.sh local \
+  && $PWD/tools/post_install.sh
   ;;
 compute)
-  public_opt
-  compute_opt
-  $PWD/install/init/add-compute.sh local
+  public_opt \
+  && compute_opt \
+  && $PWD/install/init/add-compute.sh local
   ;;
 *)
   echo "Please input cluster role manage | compute."

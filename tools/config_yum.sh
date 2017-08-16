@@ -20,7 +20,7 @@ EOF
     yum makecache
 
     echo "Install the system prerequisite package..."
-    yum install -y perl telnet bind-utils htop dstat mariadb
+    yum install -y perl telnet bind-utils htop dstat mariadb lvm2 lsof
 
   else
     echo "Skip modify repo file."

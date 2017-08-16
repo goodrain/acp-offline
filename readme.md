@@ -5,7 +5,7 @@
 ### 0.1 下载离线安装脚本
 
 ```bash
-git clone https://github.com/goodrain/acp-offline.git
+git clone --recursive https://github.com/goodrain/acp-offline.git
 ```
 
 
@@ -35,6 +35,9 @@ cd acp-offline
 #### 初始化环境
 
 ```bash
+# 指定本机ip
+export LOCAL_IP=本机ip地址
+
 ./acp_install.sh manage
 
 Check default gateway...

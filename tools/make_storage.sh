@@ -21,8 +21,6 @@ if [ ! -f /etc/lvm/profile/docker-thinpool.profile ];then
 
   if [ "$ARE_YOU_SURE" == "Y" -o "$ARE_YOU_SURE" == "y" ] ;then
 
-    # install lvm
-    yum install -y lvm2
     pvcreate /dev/$DOCKER_DEVICE
     vgcreate docker /dev/$DOCKER_DEVICE
     vgdisplay docker
