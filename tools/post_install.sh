@@ -5,6 +5,11 @@ echo -ne  "\e[32mCopying build files...\e[0m"
 cp -rp $PWD/grdata/build/lang-env/* /grdata/build/lang-env/ && echo OK
 cp -rp $PWD/grdata/config /grdata/ && echo OK
 
+
+# copy acp_proxy
+echo -ne  "\e[32mCopying acp_proxy files...\e[0m"
+cp -rp $PWD/modules/acp_proxy/* /etc/goodrain/tengine/ && echo OK
+
 # configure git ssh-key
 echo -ne "\n\e[32mConfigure git ssh-key...\e[0m"
 ssh-keygen -t rsa -f /etc/goodrain/ssh/goodrain-builder
