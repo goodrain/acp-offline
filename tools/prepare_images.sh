@@ -2,7 +2,14 @@
 ACTION=$1
 ROLE=$2
 
-ACP_VERSION="3.3"
+KERNEL=$(uname)
+if [ "$KERNEL" == "Darwin" ];then
+  JQBIN="$PWD/tools/jq-osx-amd64"
+elif [ "$KERNEL" == "Linux" ];then
+  JQBIN="$PWD/tools/jq-linux64"
+fi
+
+ACP_VERSION=$($JQBIN .version .config)
 IMG_DIR="$PWD/acpimg"
 IMG_PATH="hub.goodrain.com/dc-deploy/"
 
@@ -54,7 +61,12 @@ cep_prism"
 
 # pull images
 function pull_images(){
-  read -p $'\e[32mPull images?\e[0m (y|n): ' PULL_IMGS
+  if [ "$1" != "yes" ];then
+    read -p $'\e[32mPull images?\e[0m (y|n): ' PULL_IMGS
+  else
+    PULL_IMGS=y
+  fi
+
   if [ "$PULL_IMGS" == "Y" -o "$PULL_IMGS" == "y" ];then
     for img in $ACP_MODULES
     do
@@ -93,7 +105,7 @@ function save_images(){
       other_img_tag=`echo ${other_img}|sed 's/:/_/'`
       echo "check image and tag package"
       img_id=`docker images -q ${IMG_PATH}${other_img}`
-      tgz_id=`cat ${IMG_DIR}/${other_img_tag}.id`
+      tgz_id=`cat ${IMG_DIR}/${other_img_tag}.id 2>/dev/null`
       if [ "$img_id" != "$tgz_id" ];then
         echo "docker save ${IMG_PATH}${other_img}"
         docker save ${IMG_PATH}${other_img} | gzip > ${IMG_DIR}/${other_img_tag}.gz \
@@ -177,6 +189,8 @@ case $ACTION in
 pull)
   pull_images;;
 save)
+  echo "Refresh current images..."
+  pull_images yes
   save_images;;
 load)
   load_images $ROLE;;

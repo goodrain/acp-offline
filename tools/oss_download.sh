@@ -17,7 +17,9 @@ function download_repo(){
             mkdir -pv $line
             continue
         fi
-        [ ! -f $line ] && wget $OSS_DOMAIN/$OSS_PATH/$line -O $line
+        [ ! -f $line ] && echo -n "Downloading $(basename $line) ... " \
+        && curl -s $OSS_DOMAIN/$OSS_PATH/$line -o $line \
+        && echo -e "\e[32mdone.\e[0m"
   done < $REPO_LIST_FILE
 }
 
@@ -30,7 +32,9 @@ function download_acpimg(){
             mkdir -pv $line
             continue
         fi
-        [ ! -f $line ] && wget $OSS_DOMAIN/$OSS_PATH/$line -O $line
+        [ ! -f $line ] && echo -n "Downloading $(basename $line)..." \
+        && curl -s $OSS_DOMAIN/$OSS_PATH/$line -o $line \
+        && echo -e "\e[32mdone.\e[0m"
   done < $ACP_IMG_LIST_FILE
 }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-if [ ! $(grep acp-local /etc/yum.repos.d/acp.repo) ];then
+if [ ! $(grep acp-local /etc/yum.repos.d/acp.repo 2>/dev/null) ];then
   echo 
   read -p $'\e[32mClear system default repo and add goodrain repo?\e[0m (y|n): ' isOK
   if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
@@ -20,7 +20,7 @@ EOF
     yum makecache
 
     echo "Install the system prerequisite package..."
-    yum install -y perl telnet bind-utils htop dstat mariadb lvm2 lsof
+    yum install -y perl telnet net-tools bind-utils htop dstat mariadb lvm2 lsof
 
   else
     echo "Skip modify repo file."
