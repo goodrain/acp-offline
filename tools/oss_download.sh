@@ -32,6 +32,23 @@ function download_acpimg(){
             mkdir -pv $line
             continue
         fi
+
+        # 先下载md5文件和本地文件进行校验，如果不匹配再下载
+        is_gz=$(echo $line| grep '.gz$')
+        md5_file=$(echo $line| sed 's/.gz$/.md5/')
+        if [ $is_gz ];then
+            curl -s $OSS_DOMAIN/$OSS_PATH/$md5_file -o  $md5_file
+            md5sum -c $md5_file > /dev/null 2>&1
+            # 校验不一致再下载
+            if [ $? -ne 0 ];then
+                echo -n "Downloading $(basename $line)..." \
+                && curl -s $OSS_DOMAIN/$OSS_PATH/$line -o $line \
+                && echo -e "\e[32mdone.\e[0m"
+            fi
+        fi
+
+        # id file
+        is_id=$(echo $line| grep '.id$')
         [ ! -f $line ] && echo -n "Downloading $(basename $line)..." \
         && curl -s $OSS_DOMAIN/$OSS_PATH/$line -o $line \
         && echo -e "\e[32mdone.\e[0m"
@@ -39,6 +56,6 @@ function download_acpimg(){
 }
 
 # --- main -------
-download_repo
+#download_repo
 
 download_acpimg

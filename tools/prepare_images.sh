@@ -94,6 +94,7 @@ function save_images(){
       if [ "$img_id" != "$tgz_id" ];then
         echo "docker save ${IMG_PATH}${img}:${ACP_VERSION}"
         docker save ${IMG_PATH}${img}:${ACP_VERSION} | gzip > ${IMG_DIR}/${img}_${ACP_VERSION}.gz \
+	      && md5sum acpimg/${img}_${ACP_VERSION}.gz > ${IMG_DIR}/${img}_${ACP_VERSION}.md5 \
         && echo $img_id > ${IMG_DIR}/${img}_${ACP_VERSION}.id
       else
         echo -e "Image: \e[31m${img}:${ACP_VERSION}\e[0m,Compressed package:\e[32m${img}_${ACP_VERSION}.gz\e[0m has been saved and skipped."
@@ -109,6 +110,7 @@ function save_images(){
       if [ "$img_id" != "$tgz_id" ];then
         echo "docker save ${IMG_PATH}${other_img}"
         docker save ${IMG_PATH}${other_img} | gzip > ${IMG_DIR}/${other_img_tag}.gz \
+      	&& md5sum acpimg/${other_img_tag}.gz > ${IMG_DIR}/${other_img_tag}.md5 \
         && echo $img_id > ${IMG_DIR}/${other_img_tag}.id
       else
         echo -e "Image: \e[31m${other_img}\e[0m,Compressed package:\e[32m${other_img_tag}.gz\e[0m has been saved and skipped."
@@ -141,8 +143,15 @@ function load_images(){
         img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
         tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
         if [ "$img_id" != "$tgz_id" ];then
-          echo "docker load ${IMG_PATH}${img}:${ACP_VERSION}"
-          cat ${IMG_DIR}/${img}_${ACP_VERSION}.gz | docker load
+          echo "Check ${img}:${ACP_VERSION}..."
+          md5sum -c ${IMG_DIR}/${img}_${ACP_VERSION}.md5 > /dev/null 2>&1
+          if [ $? -eq 0 ];then
+            echo "docker load ${IMG_PATH}${img}:${ACP_VERSION}"
+            cat ${IMG_DIR}/${img}_${ACP_VERSION}.gz | docker load
+          else
+            echo -e "${IMG_DIR}/${img}_${ACP_VERSION}.gz checksum \e[31mdid NOT\e[0m match,please re-download."
+            continue;
+          fi
         else
           echo "${IMG_PATH}${img}:${ACP_VERSION} already loaded."
         fi
@@ -155,27 +164,57 @@ function load_images(){
         tgz_id=`cat ${IMG_DIR}/${other_img_tag}.id`
         
         if [ "$img_id" != "$tgz_id" ];then
-          echo "docker load ${IMG_PATH}${other_img}"
-          cat ${IMG_DIR}/`echo ${other_img}|sed 's/:/_/'`.gz | docker load
+          echo "Check ${img}:${ACP_VERSION}..."
+          md5sum -c ${IMG_DIR}/${other_img_tag}.md5 > /dev/null 2>&1
+          if [ $? -eq 0 ];then
+            echo "docker load ${IMG_PATH}${other_img}"
+            cat ${IMG_DIR}/${other_img_tag}.gz | docker load
+          else
+            echo -e "${IMG_PATH}${other_img_tag}.gz checksum \e[31mdid NOT\e[0m match"
+            break;
+          fi
         else
           echo "${IMG_PATH}${other_img} already loaded."
         fi
-        
       done
     elif [ "$role" == "compute" ];then
       for other_img in $COMPUTE_LOAD_IMGS
       do
-        echo "docker load ${IMG_PATH}${other_img}"
-        cat ${IMG_DIR}/`echo ${other_img}|sed 's/:/_/'`.gz | docker load
+        other_img_tag=`echo ${other_img}|sed 's/:/_/'`
+        img_id=`docker images -q ${IMG_PATH}${other_img}`
+        tgz_id=`cat ${IMG_DIR}/${other_img_tag}.id`
+        
+        if [ "$img_id" != "$tgz_id" ];then
+          echo "Check ${img}:${ACP_VERSION}..."
+          md5sum -c ${IMG_DIR}/${other_img_tag}.md5 > /dev/null 2>&1
+          if [ $? -eq 0 ];then
+            echo "docker load ${IMG_PATH}${other_img}"
+            cat ${IMG_DIR}/${other_img_tag}.gz | docker load
+          else
+            echo -e "${IMG_PATH}${other_img_tag}.gz checksum \e[31mdid NOT\e[0m match"
+            continue;
+          fi
+        else
+          echo "${IMG_PATH}${other_img} already loaded."
+        fi
       done
      
       for module_img in $COMPUTE_LOAD_MODULES
       do
         img_id=`docker images -q ${IMG_PATH}${module_img}:${ACP_VERSION}`
         tgz_id=`cat ${IMG_DIR}/${module_img}_${ACP_VERSION}.id 2>/dev/null`
+
         if [ "$img_id" != "$tgz_id" ];then
-          echo "docker load ${IMG_PATH}${module_img}:${ACP_VERSION}"
-          cat ${IMG_DIR}/${module_img}_${ACP_VERSION}.gz | docker load
+          echo "Check ${module_img}:${ACP_VERSION}..."
+          md5sum -c ${IMG_DIR}/${module_img}_${ACP_VERSION}.md5 > /dev/null 2>&1
+          if [ $? -eq 0 ];then
+            echo "docker load ${IMG_PATH}${module_img}:${ACP_VERSION}"
+            cat ${IMG_DIR}/${module_img}_${ACP_VERSION}.gz | docker load
+          else
+            echo -e "${IMG_DIR}/${module_img}_${ACP_VERSION}.gz checksum \e[31mdid NOT\e[0m match"
+            continue;
+          fi
+        
         else
           echo "${IMG_PATH}${module_img}:${ACP_VERSION} already loaded."
         fi
@@ -189,9 +228,8 @@ case $ACTION in
 pull)
   pull_images;;
 save)
-  echo "Refresh current images..."
-  pull_images yes
-  save_images;;
+  save_images
+  ;;
 load)
   load_images $ROLE;;
 push)
