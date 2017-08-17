@@ -4,3 +4,7 @@ acpimg
 grdata
 repo
 app_publish
+tools/download_rpms.sh
+tools/generate_file_list.sh
+tools/process_app_image.sh
+tools/upload_oss.sh
