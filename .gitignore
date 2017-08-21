@@ -1,4 +1,5 @@
 appimg
+*.bak
 .DS_Store
 acpimg
 grdata

@@ -1,63 +1,8 @@
 #!/bin/bash
+. $PWD/tools/common.sh
+
 ACTION=$1
 ROLE=$2
-
-KERNEL=$(uname)
-if [ "$KERNEL" == "Darwin" ];then
-  JQBIN="$PWD/tools/jq-osx-amd64"
-elif [ "$KERNEL" == "Linux" ];then
-  JQBIN="$PWD/tools/jq-linux64"
-fi
-
-ACP_VERSION=$($JQBIN .version .config)
-IMG_DIR="$PWD/acpimg"
-IMG_PATH="hub.goodrain.com/dc-deploy/"
-
-OTHER_MODULES="archiver:latest \
-archiver:gr-docker-utils \
-archiver:gr-docker-compose \
-archiver:grctl \
-calico-node:v1.3.0 \
-cfssl:latest \
-registry:2.3.1 \
-pause-amd64:3.0"
-
-
-ACP_MODULES="acp_dns \
-acp_proxy \
-acp_db \
-acp_mq \
-acp_repo \
-acp_event_log \
-acp_lb \
-acp_api \
-acp_labor \
-acp_web \
-acp_webcli \
-acp_entrance \
-cep_hbase \
-cep_opentsdb \
-cep_dalaran \
-cep_server \
-cep_logtransfer \
-cep_prism \
-builder \
-runner \
-adapter"
-
-PUSH_IMGS="archiver:gr-docker-utils \
-archiver:gr-docker-compose \
-archiver:grctl"
-
-COMPUTE_LOAD_IMGS="archiver:gr-docker-utils \
-archiver:gr-docker-compose \
-archiver:grctl \
-archiver:latest \
-calico-node:v1.3.0"
-
-COMPUTE_LOAD_MODULES="acp_proxy \
-acp_webcli \
-cep_prism"
 
 # pull images
 function pull_images(){
@@ -157,7 +102,7 @@ function load_images(){
         fi
       done
 
-      for other_img in $OTHER_MODULES
+      for other_img in $OTHER_MODULES $ARCHIVER_IMG
       do
         other_img_tag=`echo ${other_img}|sed 's/:/_/'`
         img_id=`docker images -q ${IMG_PATH}${other_img}`

@@ -47,30 +47,45 @@ Check unnecessary service...
 disable firewalld
 disable NetworkManager
 
+# 清理当前系统的repo文件，并写入goodrain本地repo配置
 Clear system default repo and add goodrain repo? (y|n): y
+
+# 制作docker的存储磁盘
 Make docker storage device? (Y|N):y
 
 NAME HCTL       TYPE VENDOR   MODEL             REV TRAN
 sda  2:0:0:0    disk VMware,  VMware Virtual S 1.0  spi
 sdb  2:0:1:0    disk VMware,  VMware Virtual S 1.0  spi
 sr0  1:0:0:0    rom  NECVMWar VMware IDE CDR10 1.00 ata
+# 选择一块单独的磁盘，或者分区作为docker的存储
+Please select device for docker storage device:sdb
 
+# 确认选择
 Are you sure use [sdb] for docker storage? (Y|N):y
 
+# 修改内核启动参数，支持docker限制swap
 Do you want to restrict the use of container swap? (Y|N) [Y]:
 
-# 修改完后需要重启，重启后继续执行  ./01_init.sh manage 之前的步骤可以按n略过
+# 修改完后需要重启，如果这里不重启，建议安装云帮后重启系统
+The operation need to restart the system, restart now? (Y|N) [Y]:n
 
+# 修改hosts文件添加  goodrain.me 和 hub.goodrain.com 解析
 Modify /etc/hosts file add goodrain.com and hub.goodrain.com? (y|n):y
 
+# 安装docker
 Install Docker? (y|n):y
 
+# 临时运行 docker registry
 Do you want to run the docker registry? (y|n):y
 
+# 载入镜像
 Load images? (y|n):y
+
+# 推送镜像
 Push images? (y|n):y
 
-# 后续都是自动安装
+# 输入平台应用的泛解析域名
+setup wild_domain for this region, like '<name>.goodrain.org' : a.b.test
 ```
 
 

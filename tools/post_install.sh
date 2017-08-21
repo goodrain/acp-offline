@@ -5,6 +5,10 @@ echo -ne  "\e[32mCopying build files...\e[0m"
 cp -rp $PWD/grdata/build/lang-env/* /grdata/build/lang-env/ && echo OK
 cp -rp $PWD/grdata/config /grdata/ && echo OK
 
+# import sql data
+echo "import sql data..."
+$PWD/modules/acp_db/sql/import_sql.sh
+
 
 # copy acp_proxy
 echo -ne  "\e[32mCopying acp_proxy files...\e[0m"

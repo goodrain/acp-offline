@@ -1,6 +1,7 @@
 {
 "name": "acp-offline",
 "version": 3.3,
+"rpms":{"docker":"gr-docker-engine-1.12.6-88.g3f2b5cf.el7.centos.x86_64"},
 "acpimg": ["acp_db","acp_web",
           "acp_dns","acp_proxy",
           "acp_db","acp_mq",
@@ -11,5 +12,12 @@
           "cep_hbase","cep_opentsdb",
           "cep_dalaran","cep_server",
           "cep_logtransfer","cep_prism",
-          "builder","runner","adapter"]
+          "builder","runner","adapter"],
+"archiver":["archiver:latest","archiver:gr-docker-utils",
+            "archiver:gr-docker-compose","archiver:grctl"],
+"other_img":{"calico-node":"v1.3.0",
+             "cfssl":"latest",
+             "registry":"2.3.1",
+             "pause-amd64":"3.0"
+             }
 }

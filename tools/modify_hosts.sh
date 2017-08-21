@@ -8,7 +8,7 @@ function manage_opt(){
   HOST_LIST="hub.goodrain.com goodrain.me"
 
   echo 
-  read -p $'Modify \e[32m/etc/hosts\e[0m file add \e[31mgoodrain.com\e[0m and \e[31mhub.goodrain.com?\e[0m (y|n): ' isOK
+  read -p $'Modify \e[32m/etc/hosts\e[0m file add \e[31mgoodrain.me\e[0m and \e[31mhub.goodrain.com?\e[0m (y|n): ' isOK
   if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
     for host in $HOST_LIST
     do

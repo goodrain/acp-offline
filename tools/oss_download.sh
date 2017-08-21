@@ -56,6 +56,6 @@ function download_acpimg(){
 }
 
 # --- main -------
-#download_repo
+download_repo
 
 download_acpimg
