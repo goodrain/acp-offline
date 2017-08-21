@@ -37,13 +37,19 @@ function download_acpimg(){
         is_gz=$(echo $line| grep '.gz$')
         md5_file=$(echo $line| sed 's/.gz$/.md5/')
         if [ $is_gz ];then
-            curl -s $OSS_DOMAIN/$OSS_PATH/$md5_file -o  $md5_file
+            echo -ne "\nGet remote $md5_file ..."
+            curl -s $OSS_DOMAIN/$OSS_PATH/$md5_file -o  $md5_file \
+            && echo -e "\e[32mdone.\e[0m"
+
+            echo -n "Check the local file $is_gz "
             md5sum -c $md5_file > /dev/null 2>&1
             # 校验不一致再下载
             if [ $? -ne 0 ];then
-                echo -n "Downloading $(basename $line)..." \
+                echo -ne "\e[31mInconsistent\e[0m,Download remote $(basename $line)..." \
                 && curl -s $OSS_DOMAIN/$OSS_PATH/$line -o $line \
                 && echo -e "\e[32mdone.\e[0m"
+            else
+                echo -e "\e[32mConsistent\e[0m,skip."
             fi
         fi
 
