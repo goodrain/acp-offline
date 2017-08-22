@@ -9,6 +9,8 @@ cp -rp $PWD/grdata/config /grdata/ && echo OK
 echo "import sql data..."
 $PWD/modules/acp_db/sql/import_sql.sh
 
+# fix config.json dir error
+[ -d /root/.docker/config.json ] && rm -rf /root/.docker/config.json
 
 # copy acp_proxy
 echo -ne  "\e[32mCopying acp_proxy files...\e[0m"
