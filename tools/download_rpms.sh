@@ -1,21 +1,6 @@
 #!/bin/bash
 
-REPO_PATH="$PWD/repo"
-
-default_rpms="gr-calico \
-gr-docker-engine \
-gr-docker-engine-selinux \
-gr-etcd \
-gr-etcdctl \
-gr-kube-apiserver \
-gr-kube-common \
-gr-kube-controller-manager \
-gr-kube-scheduler \
-gr-kubelet \
-gr-libzmq3 \
-dc-ctl \
-dc-web \
-dc-agent"
+. $PWD/tools/common.sh
 
 function download_rpm(){
   rpms=$@
@@ -28,7 +13,7 @@ function download_rpm(){
   if [ "$rpms" == "default" ];then
   {
     echo -e "download [\e[32m$default_rpms\e[0m] into local repo."
-    yum install -y $default_rpms --downloadonly --downloaddir=$PWD/repo  && \
+    yum install -y $DEFAULT_RPMS --downloadonly --downloaddir=$PWD/repo  && \
     createrepo --update  -pdo $REPO_PATH $REPO_PATH
   }
   else

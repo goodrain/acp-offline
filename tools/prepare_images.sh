@@ -19,10 +19,10 @@ function pull_images(){
       docker pull ${IMG_PATH}${img}:${ACP_VERSION}
     done
 
-    for other_img in $OTHER_MODULES
+    for img in $OTHER_MODULES $ARCHIVER_IMG
     do
       echo "docker pull ${IMG_PATH}${other_img}"
-      docker pull ${IMG_PATH}${other_img}
+      docker pull ${IMG_PATH}${img}
     done  
   fi
 }
@@ -31,47 +31,48 @@ function pull_images(){
 function save_images(){
   read -p $'\e[32mSave images?\e[0m (y|n): ' SAVE_IMGS
   if [ "$SAVE_IMGS" == "Y" -o "$SAVE_IMGS" == "y" ];then
-    for img in $ACP_MODULES
-      do
-      echo "check image and tag package"
-      img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
-      tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
-      if [ "$img_id" != "$tgz_id" ];then
-        echo "docker save ${IMG_PATH}${img}:${ACP_VERSION}"
-        docker save ${IMG_PATH}${img}:${ACP_VERSION} | gzip > ${IMG_DIR}/${img}_${ACP_VERSION}.gz \
-	      && md5sum acpimg/${img}_${ACP_VERSION}.gz > ${IMG_DIR}/${img}_${ACP_VERSION}.md5 \
-        && echo $img_id > ${IMG_DIR}/${img}_${ACP_VERSION}.id
-      else
-        echo -e "Image: \e[31m${img}:${ACP_VERSION}\e[0m,Compressed package:\e[32m${img}_${ACP_VERSION}.gz\e[0m has been saved and skipped."
-      fi
-    done
+  for img in $ACP_MODULES
+  do
+    echo "check image and tag package"
+    img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
+    tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
+    if [ "$img_id" != "$tgz_id" ];then
+      echo "docker save ${IMG_PATH}${img}:${ACP_VERSION}"
+      docker save ${IMG_PATH}${img}:${ACP_VERSION} | gzip > ${IMG_DIR}/${img}_${ACP_VERSION}.gz \
+      && md5sum acpimg/${img}_${ACP_VERSION}.gz > ${IMG_DIR}/${img}_${ACP_VERSION}.md5 \
+      && echo $img_id > ${IMG_DIR}/${img}_${ACP_VERSION}.id
+    else
+      echo -e "Image: \e[31m${img}:${ACP_VERSION}\e[0m,Compressed package:\e[32m${img}_${ACP_VERSION}.gz\e[0m has been saved and skipped."
+    fi
+  done
 
-    for other_img in $OTHER_MODULES
-      do
-      other_img_tag=`echo ${other_img}|sed 's/:/_/'`
-      echo "check image and tag package"
-      img_id=`docker images -q ${IMG_PATH}${other_img}`
-      tgz_id=`cat ${IMG_DIR}/${other_img_tag}.id 2>/dev/null`
-      if [ "$img_id" != "$tgz_id" ];then
-        echo "docker save ${IMG_PATH}${other_img}"
-        docker save ${IMG_PATH}${other_img} | gzip > ${IMG_DIR}/${other_img_tag}.gz \
-      	&& md5sum acpimg/${other_img_tag}.gz > ${IMG_DIR}/${other_img_tag}.md5 \
-        && echo $img_id > ${IMG_DIR}/${other_img_tag}.id
-      else
-        echo -e "Image: \e[31m${other_img}\e[0m,Compressed package:\e[32m${other_img_tag}.gz\e[0m has been saved and skipped."
-      fi
-    done
+  for img in $OTHER_MODULES $ARCHIVER_IMG
+  do
+    img_tag=`echo ${img}|sed 's/:/_/'`
+    echo "check image and tag package..."
+    img_id=`docker images -q ${IMG_PATH}${img}`
+    tgz_id=`cat ${IMG_DIR}/${img_tag}.id 2>/dev/null`
+    if [ "$img_id" != "$tgz_id" ];then
+      echo "docker save ${IMG_PATH}${other_img}"
+      docker save ${IMG_PATH}${other_img} | gzip > ${IMG_DIR}/${other_img_tag}.gz \
+      && md5sum acpimg/${other_img_tag}.gz > ${IMG_DIR}/${other_img_tag}.md5 \
+      && echo $img_id > ${IMG_DIR}/${other_img_tag}.id
+    else
+      echo -e "Image: \e[31m${other_img}\e[0m,Compressed package:\e[32m${other_img_tag}.gz\e[0m has been saved and skipped."
+    fi
+  done
   fi
 }
 
 # push images
 function push_images(){
+  pull_images=$1
   read -p $'\e[32mPush images?\e[0m (y|n): ' IS_PUSH_IMGS
   if [ "$IS_PUSH_IMGS" == "Y" -o "$IS_PUSH_IMGS" == "y" ];then
-    for push_img in $PUSH_IMGS
+    for img in $pull_images
     do
-      echo -e "docker push \e[32m${IMG_PATH}${push_img}\e[0m"
-      docker push ${IMG_PATH}${push_img}
+      echo -e "docker push \e[32m${IMG_PATH}${img}\e[0m"
+      docker push ${IMG_PATH}${img}
     done
   fi
 }
@@ -178,7 +179,8 @@ save)
 load)
   load_images $ROLE;;
 push)
-  push_images;;
+  push_images "$ARCHIVER_IMG"
+  ;;
 *)
   echo "Please specify the operation command. pull|save|load|push"
   exit 1;;

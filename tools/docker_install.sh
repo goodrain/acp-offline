@@ -1,13 +1,15 @@
 #!/bin/bash
 
+. $PWD/tools/common.sh
+
 echo
 read -p $'\e[32mInstall Docker?\e[0m (y|n): ' isOK
 if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
   
   # prepare env file
   mkdir -pv /etc/goodrain/envs
-
-cat > /etc/goodrain/envs/docker.sh << END
+  if [ -f $LVM_PROFILE ];then
+cat > $DOCKER_ENV_FILE << END
 DOCKER_OPTS="-H 0.0.0.0:2376 \
 -H unix:///var/run/docker.sock \
 --bip=172.30.42.1/16 \
@@ -19,6 +21,16 @@ DOCKER_OPTS="-H 0.0.0.0:2376 \
 --storage-opt=dm.use_deferred_deletion=true \
 --userland-proxy=false"
 END
+  else
+cat > $DOCKER_ENV_FILE << END
+DOCKER_OPTS="-H 0.0.0.0:2376 \
+-H unix:///var/run/docker.sock \
+--bip=172.30.42.1/16 \
+--insecure-registry goodrain.me \
+--insecure-registry hub.goodrain.com \
+--userland-proxy=false"
+END
+  fi
 
   # install docker
   yum install -y gr-docker-engine
