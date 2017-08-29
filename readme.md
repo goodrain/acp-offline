@@ -39,7 +39,7 @@ cd acp-offline
 # 指定本机ip
 export LOCAL_IP=本机ip地址
 
-./acp_install.sh manage
+./setup.sh manage
 
 Check default gateway...
 Default Gateway: 172.16.130.1
@@ -103,7 +103,7 @@ setup wild_domain for this region, like '<name>.goodrain.org' : a.b.test
 #### 初始化环境
 
 ```bash
-./acp_install.sh compute
+./setup.sh compute
 
 Check default gateway...
 Default Gateway: 172.16.130.1
