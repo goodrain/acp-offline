@@ -1,20 +1,5 @@
 #!/bin/bash
 
-function public_opt(){
-  clear
-  # check system
-  /bin/bash $PWD/tools/check.sh
-
-  # config yum
-  /bin/bash $PWD/tools/config_yum.sh
-
-  # make docker storage
-  /bin/bash $PWD/tools/make_storage.sh
-
-  # limit container swap
-  /bin/bash $PWD/tools/limit_swap.sh
-}
-
 function manage_opt(){
   # modify hosts
   /bin/bash $PWD/tools/modify_hosts.sh manage
@@ -57,14 +42,12 @@ function compute_opt(){
 #====== main ========
 case $1 in 
 manage)
-  public_opt \
-  && manage_opt \
+  manage_opt \
   && $PWD/install/init/install.sh local \
   && $PWD/tools/post_install.sh
   ;;
 compute)
-  public_opt \
-  && compute_opt \
+  compute_opt \
   && $PWD/install/init/add-compute.sh local
   ;;
 *)

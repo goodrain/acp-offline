@@ -4,6 +4,7 @@
 echo -ne  "\e[32mCopying build files...\e[0m"
 cp -rp $PWD/grdata/build/lang-env/* /grdata/build/lang-env/ && echo OK
 cp -rp $PWD/grdata/config /grdata/ && echo OK
+cp -rp $PWD/app_publish  /grdata/build/tenant/ && echo OK 
 
 # import sql data
 echo "import sql data..."

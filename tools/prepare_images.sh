@@ -21,7 +21,7 @@ function pull_images(){
 
     for img in $OTHER_MODULES $ARCHIVER_IMG
     do
-      echo "docker pull ${IMG_PATH}${other_img}"
+      echo "docker pull ${IMG_PATH}${img}"
       docker pull ${IMG_PATH}${img}
     done  
   fi
