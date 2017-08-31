@@ -55,7 +55,12 @@ INSTALL_TYPE=$($JQBIN .install_type $CONF_FILE | sed 's/"//g')
 function check(){
 
     echo -e "\e[32minit system for acp...\e[0m\n"
-    echo "{\"install_type\":\"local\"}" > /etc/goodrain/.config.json
+    [ ! -d /etc/goodrain ] && mkdir -pv /etc/goodrain
+    echo -e "{\n\"install_type\":\"local\",\n\"time\":\"`date +'%F %H:%M:%S'`\"\n}" > /etc/goodrain/.config.json
+    
+    # init docker config
+    [ ! ~/.docker ] && mkdir ~/.docker
+    [ ! -f ~/.docker/config.json ] && echo "{}" > ~/.docker/config.json
 
     echo -e "\e[32mCheck default gateway...\e[0m"
     haveGW=`route -n| grep UG|awk '{print $2}'`

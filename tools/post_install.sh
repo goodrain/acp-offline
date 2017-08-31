@@ -31,4 +31,3 @@ EOF
 chown -R rain.rain /etc/goodrain/ssh
 echo -e "Please set the \e[33mgit ssh port\e[0m according to the actual situation."
 
-echo -e "{\n\"install_type\":\"local\",\n\"time\":\"`date +'%F %H:%M:%S'`\"\n}" > /etc/goodrain/.config.json
