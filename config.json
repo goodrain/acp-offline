@@ -1,6 +1,7 @@
 {
 "name": "acp-offline",
 "version": 3.3,
+"install_type": "local",
 "files":{
   "lvm_profile":"/etc/lvm/profile/docker-thinpool.profile",
   "docker_env_file":"/etc/goodrain/envs/docker.sh"

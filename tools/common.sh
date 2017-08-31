@@ -2,17 +2,33 @@
 
 # common function and envs
 
-#ENVS
+#======== ENVS =========
 KERNEL=$(uname)
 if [ "$KERNEL" == "Darwin" ];then
   JQBIN="$PWD/tools/jq-osx-amd64"
 elif [ "$KERNEL" == "Linux" ];then
   JQBIN="$PWD/tools/jq-linux64"
 fi
+
+# check os-release
+RELEASE_INFO=$(cat /etc/os-release | grep "^VERSION=" | awk -F '="' '{print $2}' | awk '{print $1}' | cut -b 1-5)
+if [ $RELEASE_INFO == '7' ];then
+    RELEASE_PATH='centos/7'
+elif [[ $RELEASE_INFO =~ "14" ]];then
+    RELEASE_PATH='ubuntu/trusty'
+elif [[ $RELEASE_INFO =~ '16' ]];then
+    RELEASE_PATH='ubuntu/xenial'
+else
+    echo "Release $(cat /etc/os-release | grep "PRETTY" | awk -F '"' '{print $2}') Not supported"
+    exit 2
+fi
+
+
 CONF_FILE="config.json"
 
 # acp version such as 3.3
 ACP_VERSION=$($JQBIN .version $CONF_FILE)
+REPO_VERSION=${ACP_VERSION}
 IMG_DIR="$PWD/acpimg"
 REPO_PATH="$PWD/repo"
 IMG_PATH="hub.goodrain.com/dc-deploy/"
@@ -32,3 +48,162 @@ DEFAULT_RPMS=$($JQBIN .default_rpms[] $CONF_FILE | sed 's/"//g' )
 
 LVM_PROFILE=$($JQBIN .files.lvm_profile $CONF_FILE | sed 's/"//g' )
 DOCKER_ENV_FILE=$($JQBIN .files.docker_env_file $CONF_FILE | sed 's/"//g' )
+INSTALL_TYPE=$($JQBIN .install_type $CONF_FILE | sed 's/"//g')
+
+# ========== functions =============
+
+function check(){
+
+    echo -e "\e[32minit system for acp...\e[0m\n"
+    echo "{\"install_type\":\"local\"}" > /etc/goodrain/.config.json
+
+    echo -e "\e[32mCheck default gateway...\e[0m"
+    haveGW=`route -n| grep UG|awk '{print $2}'`
+    if [ "$haveGW" != "" ];then
+        echo -e "Default Gateway: \e[32m$haveGW\e[0m"
+    else
+        echo -e "\e[31mFailure,not found default gateway.\nPlease set the default route.\nUse\e[0m [\e[33mroute add default gw route-ipaddress\e[0m] \e[31mto set.\e[0m"
+        exit 2
+    fi
+
+    # check localhost in /etc/hosts
+    if [ ! "$(grep localhost /etc/hosts)" ];then
+        echo -e "127.0.0.1\tlocalhost" >> /etc/hosts
+    fi
+
+    # check unnecessary service
+    echo -e "\e[32mCheck unnecessary service...\e[0m"
+    if [[ $RELEASE_INFO == '7' ]];then
+        echo "disable firewalld"
+        systemctl stop firewalld \
+        && systemctl disable firewalld
+
+        echo "disable NetworkManager"
+        systemctl stop NetworkManager \
+        && systemctl disable NetworkManager
+
+        echo -e "\e[32mCheck dns...\e[0m"
+        
+        systemctl stop dnsmasq
+        sed -i 's/^dns=dnsmasq/#&/' /etc/NetworkManager/NetworkManager.conf
+    fi
+
+    if [[ "$(lsof -i:53 | wc -l)" -ne 0 ]];then
+        lsof -i:53 | grep -v 'PID' | awk '{print $2}' | uniq | xargs kill -9
+        if [[ "$?" -eq 0 ]];then
+            echo "stop dnsmasq"
+        fi
+    fi
+    if [[ "$(lsof -i:5353 | wc -l)" -ne 0 ]];then
+        lsof -i:5353 | grep -v 'PID' | awk '{print $2}' | uniq | xargs kill -9
+        if [[ "$?" -eq 0 ]];then
+            echo ""
+        fi
+    fi
+}
+
+function config_mirrors(){
+    if [ "$INSTALL_TYPE" == "local" ];then
+        if [ ! -f /etc/yum.repos.d/acp.repo ];then
+            yum clean all \
+            && rm -rf /etc/yum.repos.d/*
+
+            cat >/etc/yum.repos.d/acp.repo <<EOF
+[acp-local]
+name=local
+baseurl=file://$PWD/repo
+enabled=1
+gpgcheck=0
+EOF
+
+            yum makecache
+
+            echo "Install the system prerequisite package..."
+            yum install -y perl telnet bind-utils htop dstat mariadb net-tools lsof iproute rsync lvm2
+        fi
+    else
+        if [[ $RELEASE_INFO == '7' ]];then
+            echo -e "\e[32mConfigure yum repo...\e[0m"
+            cat >/etc/yum.repos.d/acp.repo <<EOF
+[goodrain]
+name=goodrain CentOS-\$releasever - for x86_64
+baseurl=http://repo.goodrain.com/centos/\$releasever/${REPO_VERSION}/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=http://repo.goodrain.com/gpg/RPM-GPG-KEY-CentOS-goodrain
+EOF
+            yum makecache \
+            && yum install -y lsof htop rsync net-tools telnet iproute
+        else
+            echo -e "\e[32mConfigure apt sources.list...\e[0m"
+            if [[ $RELEASE_INFO =~ '16' ]];then
+                echo deb http://repo.goodrain.com/ubuntu/16.04 ${REPO_VERSION} main | tee /etc/apt/sources.list.d/acp.list 
+            else
+                echo deb http://repo.goodrain.com/ubuntu/14.04 ${REPO_VERSION} main | tee /etc/apt/sources.list.d/acp.list                 
+            fi
+            curl http://repo.goodrain.com/gpg/goodrain-C4CDA0B7 2>/dev/null | apt-key add - \
+            && apt-get update || apt update \
+            && apt-get install  -y lsof htop rsync net-tools telnet iproute lvm2 || apt install  -y lsof htop rsync net-tools telnet iproute lvm2
+        fi
+    fi
+}
+
+function make_storage(){    
+
+    if [ ! -f /etc/lvm/profile/docker-thinpool.profile ];then
+
+        echo -e "\e[31m Warning: Defalut Skip Device;Only support more than two disks;\e[0m"
+
+        read -p "Make docker storage device? [Y|N] (defalut:N)" MAKE_DEVICE
+        if [ "$MAKE_DEVICE" == "Y" -o "$MAKE_DEVICE" == 'y' ] ;then
+            lsblk -l
+            echo -e "\e[31m1st device(vda/sda/xvda)should not select,just for system.\e[0m"
+            read -p $'\e[32mPlease select device(e.g:vdb/sdb/xvdb) for docker storage device: \e[0m' DOCKER_DEVICE
+
+            if [ -b /dev/$DOCKER_DEVICE ];then
+                echo -en "\n\e[32mAre you sure use \e[0m\e[31m[$DOCKER_DEVICE]\e[0m \e[32mfor docker storage?\e[0m"
+                read -p " (Y=yes|N=no|C=cancel): " ARE_YOU_SURE
+                ARE_YOU_SURE="$(echo ${ARE_YOU_SURE} | tr 'A-Z' 'a-z')"
+            else
+                echo "DEVICE $DOCKER_DEVICE IS NOT EXIST!"
+            fi
+
+            if [ "$ARE_YOU_SURE" == "y" -o "$ARE_YOU_SURE" == "" ] ;then   
+
+                pvcreate /dev/$DOCKER_DEVICE \
+                && vgcreate docker /dev/$DOCKER_DEVICE \
+                && vgdisplay docker \
+                \
+                && lvcreate --wipesignatures y -n thinpool docker -l 95%VG \
+                && lvcreate --wipesignatures y -n thinpoolmeta docker -l 1%VG \
+                \
+                && lvconvert -y --zero n -c 512K --thinpool docker/thinpool --poolmetadata docker/thinpoolmeta \
+                && cat > /etc/lvm/profile/docker-thinpool.profile << EOF
+activation {
+thin_pool_autoextend_threshold=80
+thin_pool_autoextend_percent=20
+}
+EOF
+                
+                lvchange --metadataprofile docker-thinpool docker/thinpool
+
+            elif [ "$ARE_YOU_SURE" == "c" -o "$ARE_YOU_SURE" == "n" ];then
+                echo "Skip make docker storage device,use defalut."
+            fi
+        fi
+        echo "Skip make docker storage device"
+    fi
+}
+
+function config_grub(){
+    configured=`grep "swapaccount=1" /etc/default/grub`
+    if [ "$configured" == "" ];then
+      #echo "limit swap"
+      echo GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1" >> /etc/default/grub 
+        if [[ $RELEASE_INFO == '7' ]];then
+            grub2-mkconfig -o  /boot/grub2/grub.cfg 
+        else
+            grub-mkconfig -o /boot/grub/grub.cfg
+        fi
+    fi
+}

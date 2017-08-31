@@ -1,5 +1,24 @@
 #!/bin/bash
 
+# source common env and functions
+. tools/common.sh
+
+function public_opt(){
+  clear
+  # check system
+  check
+
+  # config repo
+  config_mirrors
+
+  # make docker storage
+  make_storage
+
+  # limit container swap
+  config_grub
+}
+
+
 function manage_opt(){
   # modify hosts
   /bin/bash $PWD/tools/modify_hosts.sh manage
@@ -42,12 +61,14 @@ function compute_opt(){
 #====== main ========
 case $1 in 
 manage)
-  manage_opt \
+  public_opt \
+  && manage_opt \
   && $PWD/install/init/install.sh local \
   && $PWD/tools/post_install.sh
   ;;
 compute)
-  compute_opt \
+  public_opt \
+  && compute_opt \
   && $PWD/install/init/add-compute.sh local
   ;;
 *)
