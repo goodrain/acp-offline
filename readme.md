@@ -5,7 +5,12 @@
 ### 0.1 下载离线安装脚本
 
 ```bash
+# 完整克隆代码
 git clone --recursive https://github.com/goodrain/acp-offline.git
+
+# 更新现有代码
+cd acp-offline
+git pull --recurse-submodules
 ```
 
 
