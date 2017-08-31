@@ -59,7 +59,7 @@ function check(){
     echo -e "{\n\"install_type\":\"local\",\n\"time\":\"`date +'%F %H:%M:%S'`\"\n}" > /etc/goodrain/.config.json
     
     # init docker config
-    [ ! ~/.docker ] && mkdir ~/.docker
+    mkdir -pv ~/.docker
     [ ! -f ~/.docker/config.json ] && echo "{}" > ~/.docker/config.json
 
     echo -e "\e[32mCheck default gateway...\e[0m"
