@@ -131,7 +131,7 @@ function load_images(){
         tgz_id=`cat ${IMG_DIR}/${other_img_tag}.id`
         
         if [ "$img_id" != "$tgz_id" ];then
-          echo "Check ${img}:${ACP_VERSION}..."
+          echo "Check ${other_img}:${ACP_VERSION}..."
           md5sum -c ${IMG_DIR}/${other_img_tag}.md5 > /dev/null 2>&1
           if [ $? -eq 0 ];then
             echo "docker load ${IMG_PATH}${other_img}"
