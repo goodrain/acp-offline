@@ -25,6 +25,12 @@ jq .version config.json
 ./tools/prepare_images.sh save
 ```
 
+### 1.3 下载最新的rpm包
+
+```bash
+./tools/download_rpms.sh default
+```
+
 
 
 ## 二、将更新的镜像包上传到阿里oss

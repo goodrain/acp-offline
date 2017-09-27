@@ -15,6 +15,7 @@ repo/dc-agent-3.3.0-53.g873e99f.x86_64.rpm
 repo/dc-agent-3.3.0-54.g87fa1be.x86_64.rpm
 repo/dc-agent-3.3.0-57.gc456ba3.x86_64.rpm
 repo/dc-agent-3.3.0-58.g95a69bd.x86_64.rpm
+repo/dc-agent-3.3.0-86.g45e7c92.x86_64.rpm
 repo/dc-ctl-3.3.0-31.g99ffb30.x86_64.rpm
 repo/dc-ctl-3.3.0-35.gae426db.x86_64.rpm
 repo/dc-ctl-3.3.0-43.g9ee61b1.x86_64.rpm
@@ -23,6 +24,7 @@ repo/dc-ctl-3.3.0-53.g873e99f.x86_64.rpm
 repo/dc-ctl-3.3.0-54.g87fa1be.x86_64.rpm
 repo/dc-ctl-3.3.0-57.gc456ba3.x86_64.rpm
 repo/dc-ctl-3.3.0-58.g95a69bd.x86_64.rpm
+repo/dc-ctl-3.3.0-86.g45e7c92.x86_64.rpm
 repo/dc-web-3.3.0-31.g99ffb30.x86_64.rpm
 repo/dc-web-3.3.0-35.gae426db.x86_64.rpm
 repo/dc-web-3.3.0-43.g9ee61b1.x86_64.rpm
@@ -31,6 +33,7 @@ repo/dc-web-3.3.0-53.g873e99f.x86_64.rpm
 repo/dc-web-3.3.0-54.g87fa1be.x86_64.rpm
 repo/dc-web-3.3.0-57.gc456ba3.x86_64.rpm
 repo/dc-web-3.3.0-58.g95a69bd.x86_64.rpm
+repo/dc-web-3.3.0-86.g45e7c92.x86_64.rpm
 repo/device-mapper-1.02.135-1.el7_3.5.x86_64.rpm
 repo/device-mapper-event-1.02.135-1.el7_3.5.x86_64.rpm
 repo/device-mapper-event-libs-1.02.135-1.el7_3.5.x86_64.rpm
@@ -47,8 +50,10 @@ repo/gr-docker-engine-selinux-1.12.6-88.g3f2b5cf.el7.centos.noarch.rpm
 repo/gr-docker-engine-selinux-1.12.6-90.g16246b4.el7.centos.noarch.rpm
 repo/gr-etcd-3.0.15-5.x86_64.rpm
 repo/gr-etcd-3.0.15-8.x86_64.rpm
+repo/gr-etcd-3.0.15-9.12.x86_64.rpm
 repo/gr-etcdctl-3.0.15-5.x86_64.rpm
 repo/gr-etcdctl-3.0.15-8.x86_64.rpm
+repo/gr-etcdctl-3.0.15-9.12.x86_64.rpm
 repo/gr-kube-apiserver-1.6.4-27.gc0a5812.x86_64.rpm
 repo/gr-kube-apiserver-1.6.4-46.g9ac2dde.x86_64.rpm
 repo/gr-kube-common-1.6.4-27.gc0a5812.x86_64.rpm
@@ -133,12 +138,12 @@ repo/python-kitchen-1.1.1-5.el7.noarch.rpm
 repo/quota-4.01-14.el7.x86_64.rpm
 repo/quota-nls-4.01-14.el7.noarch.rpm
 repo/repodata
-repo/repodata/16df62086fc5c223bdaf163112f9ed5e0228828d00858dc5e65da4a1eca6ae69-primary.xml.gz
-repo/repodata/478dcba20286811a41112a61b72492651f19846e699bc41956ed404cfb0339c5-other.sqlite.bz2
-repo/repodata/a251c4e4935cbbc407cc0662a98872f80613c77003cc4ab104b40ac3a8a7263b-primary.sqlite.bz2
-repo/repodata/b8131686a871b25f6ee6c08088c089d685e124e93d3cea415572caf75d530953-filelists.sqlite.bz2
-repo/repodata/ba217cc0dd8c0c0605cd52d57d26279a3cc86597a4a46d8ec2f7be589c7f320d-filelists.xml.gz
-repo/repodata/d35d23baa8261a3c8fd03699aec5c6b8ae5081213bbec0e1eccd6ad422e4f221-other.xml.gz
+repo/repodata/644fcd2660dc66b0fb5b5527827dc906d8f02de87362ea5e369544e2f7298154-primary.sqlite.bz2
+repo/repodata/85594c44ee4e9ff31ae23cd3768363f586f5f1aeec495361603964e74b6f4bfb-filelists.xml.gz
+repo/repodata/8ca92421dd934f277299eff175867a5b2c67fbb700d1438bc11395577b41227f-other.xml.gz
+repo/repodata/d51de52e7a791c7561ceef8fe2beea9ef088dac30c925745c5d85d2c13f2d7b4-other.sqlite.bz2
+repo/repodata/d69e6297fe2db7746297f0c96b163e26a61ccd6a01290cfc1a0d203bf8744ac1-filelists.sqlite.bz2
+repo/repodata/dab6399a159257d5563cd687e2f4f8cc1e30d3c70e68ee1f399d75014a594bd2-primary.xml.gz
 repo/repodata/repomd.xml
 repo/rpcbind-0.2.0-38.el7_3.1.x86_64.rpm
 repo/rsync-3.0.9-17.el7.x86_64.rpm

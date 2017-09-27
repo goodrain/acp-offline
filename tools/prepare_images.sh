@@ -53,12 +53,12 @@ function save_images(){
     img_id=`docker images -q ${IMG_PATH}${img}`
     tgz_id=`cat ${IMG_DIR}/${img_tag}.id 2>/dev/null`
     if [ "$img_id" != "$tgz_id" ];then
-      echo "docker save ${IMG_PATH}${other_img}"
-      docker save ${IMG_PATH}${other_img} | gzip > ${IMG_DIR}/${other_img_tag}.gz \
-      && md5sum acpimg/${other_img_tag}.gz > ${IMG_DIR}/${other_img_tag}.md5 \
-      && echo $img_id > ${IMG_DIR}/${other_img_tag}.id
+      echo "docker save ${IMG_PATH}${img}"
+      docker save ${IMG_PATH}${img} | gzip > ${IMG_DIR}/${img_tag}.gz \
+      && md5sum acpimg/${img_tag}.gz > ${IMG_DIR}/${img_tag}.md5 \
+      && echo $img_id > ${IMG_DIR}/${img_tag}.id
     else
-      echo -e "Image: \e[31m${other_img}\e[0m,Compressed package:\e[32m${other_img_tag}.gz\e[0m has been saved and skipped."
+      echo -e "Image: \e[31m${img}\e[0m,Compressed package:\e[32m${img_tag}.gz\e[0m has been saved and skipped."
     fi
   done
   fi
