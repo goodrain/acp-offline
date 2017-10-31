@@ -33,9 +33,6 @@ function manage_opt(){
   /bin/bash $PWD/tools/prepare_images.sh load manage
   /bin/bash $PWD/tools/prepare_images.sh push
 
-  # stop docker
-  echo "stop docker"
-  systemctl stop docker
 }
 
 function compute_opt(){
