@@ -1,11 +1,11 @@
 appimg
 *.bak
 .DS_Store
-acpimg
 acpimg-old
 grdata
-repo
 repo-old
+repo
+rbdimg
 app_publish
 tools/download_rpms.sh
 tools/generate_file_list.sh

@@ -29,16 +29,14 @@ CONF_FILE="config.json"
 # acp version such as 3.3
 ACP_VERSION=$($JQBIN .version $CONF_FILE)
 REPO_VERSION=${ACP_VERSION}
-IMG_DIR="$PWD/acpimg"
+IMG_DIR="$PWD/rbdimg"
 REPO_PATH="$PWD/repo"
-IMG_PATH="hub.goodrain.com/dc-deploy/"
-RBD_PATH="rainbond/"
+IMG_PATH="rainbond/"
 
-ACP_MODULES=$($JQBIN .acpimg[] $CONF_FILE|sed 's/"//g')
-RBD_OTHER_MODULES=$($JQBIN .other_rbd_img[] $CONF_FILE|sed 's/"//g')
+ACP_MODULES=$($JQBIN .pri_img[] $CONF_FILE|sed 's/"//g')
 ARCHIVER_IMG=$($JQBIN .archiver[] $CONF_FILE | sed 's/"//g')
 
-OTHER_MODULES=$($JQBIN '.other_img[]' $CONF_FILE | sed 's/"//g' )
+OTHER_MODULES=$($JQBIN '.pub_img[]' $CONF_FILE | sed 's/"//g' )
 
 COMPUTE_LOAD_IMGS="$ARCHIVER_IMG \
 calico-node:v1.3.0"
@@ -55,7 +53,7 @@ INSTALL_TYPE=$($JQBIN .install_type $CONF_FILE | sed 's/"//g')
 
 function check(){
 
-    echo -e "\e[32minit system for acp...\e[0m\n"
+    echo -e "\e[32minit system for rainbond...\e[0m\n"
     [ ! -d /etc/goodrain ] && mkdir -pv /etc/goodrain
     echo -e "{\n\"install_type\":\"local\",\n\"time\":\"`date +'%F %H:%M:%S'`\"\n}" > /etc/goodrain/.config.json
     

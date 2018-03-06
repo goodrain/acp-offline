@@ -13,8 +13,8 @@ if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
 
   # make build dir
   [ ! -d /grdata/build/lang-env ] && mkdir -pv /grdata/build/lang-env
-  cat $PWD/acpimg/registry_2.3.1.gz | docker load \
-  && docker run -d -v /grdata/services/registry/:/var/lib/registry -p 80:5000  hub.goodrain.com/dc-deploy/registry:2.3.1
+  cat $PWD/rbdimg/rbd-registry_2.3.1.gz | docker load \
+  && docker run -d -v /grdata/services/registry/:/var/lib/registry -p 80:5000  rainbond/rbd-registry:2.3.1
 else
   echo "Skip the docker registry."
 fi

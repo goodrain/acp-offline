@@ -5,7 +5,7 @@
 echo
 read -p $'\e[32mInstall Docker?\e[0m (y|n): ' isOK
 if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
-  
+
   # prepare env file
   mkdir -pv /etc/goodrain/envs
   if [ -f $LVM_PROFILE ];then
@@ -33,7 +33,7 @@ END
   fi
 
   # install docker
-  yum install -y gr-docker-engine
+  yum install -y gr-docker-engine && mkdir -pv /opt/goodrain/docker
 
   # boot with docker
   echo "boot with docker"

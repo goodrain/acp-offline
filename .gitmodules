@@ -4,6 +4,6 @@
 [submodule "enterprise-3.4"]
 	path = enterprise-3.4
 	url = http://code.goodrain.com/acp/install.git
-[submodule "rainbd-3.5"]
-	path = rainbd-3.5
+[submodule "rbd-3.5"]
+	path = rbd-3.5
 	url = http://code.goodrain.com/acp/install.git

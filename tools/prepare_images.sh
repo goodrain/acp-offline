@@ -13,17 +13,7 @@ function pull_images(){
   fi
 
   if [ "$PULL_IMGS" == "Y" -o "$PULL_IMGS" == "y" ];then
-    for img in $ACP_MODULES $RBD_OTHER_MODULES
-    do
-      echo "docker pull ${RBD_PATH}${img}"
-      if [ "$img" = "prom/prometheus:v2.0.0" ];then
-        docker pull $img
-      else
-        docker pull ${RBD_PATH}${img}
-      fi
-    done
-
-    for img in $OTHER_MODULES $ARCHIVER_IMG
+    for img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
     do
       echo "docker pull ${IMG_PATH}${img}"
       docker pull ${IMG_PATH}${img}
@@ -35,25 +25,7 @@ function pull_images(){
 function save_images(){
   read -p $'\e[32mSave images?\e[0m (y|n): ' SAVE_IMGS
   if [ "$SAVE_IMGS" == "Y" -o "$SAVE_IMGS" == "y" ];then
-  for img in $ACP_MODULES $RBD_OTHER_MODULES
-  do
-    echo "check image and tag package"
-    # img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
-    # tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
-    img_id=`docker images -q ${RBD_PATH}${img}`
-    tgz_id=`cat ${IMG_DIR}/${img}.id 2>/dev/null`
-    img_tag=`echo ${img}|sed 's/:/_/'`
-    if [ "$img_id" != "$tgz_id" ];then
-      echo "docker save ${RBD_PATH}${img}"
-      docker save ${RBD_PATH}${img} | gzip > ${IMG_DIR}/${img_tag}.gz \
-      && md5sum acpimg/${img_tag}.gz > ${IMG_DIR}/${img_tag}.md5 \
-      && echo $img_id > ${IMG_DIR}/${img_tag}.id
-    else
-      echo -e "Image: \e[31m${img}\e[0m,Compressed package:\e[32m${img_tag}.gz\e[0m has been saved and skipped."
-    fi
-  done
-
-  for img in $OTHER_MODULES $ARCHIVER_IMG
+  for img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
   do
     img_tag=`echo ${img}|sed 's/:/_/'`
     echo "check image and tag package..."
@@ -62,7 +34,7 @@ function save_images(){
     if [ "$img_id" != "$tgz_id" ];then
       echo "docker save ${IMG_PATH}${img}"
       docker save ${IMG_PATH}${img} | gzip > ${IMG_DIR}/${img_tag}.gz \
-      && md5sum acpimg/${img_tag}.gz > ${IMG_DIR}/${img_tag}.md5 \
+      && md5sum rbdimg/${img_tag}.gz > ${IMG_DIR}/${img_tag}.md5 \
       && echo $img_id > ${IMG_DIR}/${img_tag}.id
     else
       echo -e "Image: \e[31m${img}\e[0m,Compressed package:\e[32m${img_tag}.gz\e[0m has been saved and skipped."
@@ -91,26 +63,26 @@ function load_images(){
   read -p $'\e[32mLoad images?\e[0m (y|n): ' LOAD_IMGS
   if [ "$LOAD_IMGS" == "Y" -o "$LOAD_IMGS" == "y" ];then
     if [ "$role" == "manage" ];then
-      for img in $ACP_MODULES
-      do
-        img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
-        tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
-        if [ "$img_id" != "$tgz_id" ];then
-          echo "Check ${img}:${ACP_VERSION}..."
-          md5sum -c ${IMG_DIR}/${img}_${ACP_VERSION}.md5 > /dev/null 2>&1
-          if [ $? -eq 0 ];then
-            echo "docker load ${IMG_PATH}${img}:${ACP_VERSION}"
-            cat ${IMG_DIR}/${img}_${ACP_VERSION}.gz | docker load
-          else
-            echo -e "${IMG_DIR}/${img}_${ACP_VERSION}.gz checksum \e[31mdid NOT\e[0m match,please re-download."
-            continue;
-          fi
-        else
-          echo "${IMG_PATH}${img}:${ACP_VERSION} already loaded."
-        fi
-      done
+      # for img in $ACP_MODULES
+      # do
+      #   img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
+      #   tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
+      #   if [ "$img_id" != "$tgz_id" ];then
+      #     echo "Check ${img}:${ACP_VERSION}..."
+      #     md5sum -c ${IMG_DIR}/${img}_${ACP_VERSION}.md5 > /dev/null 2>&1
+      #     if [ $? -eq 0 ];then
+      #       echo "docker load ${IMG_PATH}${img}:${ACP_VERSION}"
+      #       cat ${IMG_DIR}/${img}_${ACP_VERSION}.gz | docker load
+      #     else
+      #       echo -e "${IMG_DIR}/${img}_${ACP_VERSION}.gz checksum \e[31mdid NOT\e[0m match,please re-download."
+      #       continue;
+      #     fi
+      #   else
+      #     echo "${IMG_PATH}${img}:${ACP_VERSION} already loaded."
+      #   fi
+      # done
 
-      for other_img in $OTHER_MODULES $ARCHIVER_IMG
+      for other_img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
       do
         other_img_tag=`echo ${other_img}|sed 's/:/_/'`
         img_id=`docker images -q ${IMG_PATH}${other_img}`

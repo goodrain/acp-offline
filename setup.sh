@@ -27,11 +27,11 @@ function manage_opt(){
   /bin/bash $PWD/tools/docker_install.sh
 
   # setup registry
-  /bin/bash $PWD/tools/setup_registry.sh
+  # /bin/bash $PWD/tools/setup_registry.sh
 
   # prepare images
   /bin/bash $PWD/tools/prepare_images.sh load manage
-  /bin/bash $PWD/tools/prepare_images.sh push
+  #/bin/bash $PWD/tools/prepare_images.sh push
 
 }
 
