@@ -32,9 +32,10 @@ REPO_VERSION=${ACP_VERSION}
 IMG_DIR="$PWD/acpimg"
 REPO_PATH="$PWD/repo"
 IMG_PATH="hub.goodrain.com/dc-deploy/"
-
+RBD_PATH="rainbond/"
 
 ACP_MODULES=$($JQBIN .acpimg[] $CONF_FILE|sed 's/"//g')
+RBD_OTHER_MODULES=$($JQBIN .other_rbd_img[] $CONF_FILE|sed 's/"//g')
 ARCHIVER_IMG=$($JQBIN .archiver[] $CONF_FILE | sed 's/"//g')
 
 OTHER_MODULES=$($JQBIN '.other_img[]' $CONF_FILE | sed 's/"//g' )

@@ -13,10 +13,14 @@ function pull_images(){
   fi
 
   if [ "$PULL_IMGS" == "Y" -o "$PULL_IMGS" == "y" ];then
-    for img in $ACP_MODULES
+    for img in $ACP_MODULES $RBD_OTHER_MODULES
     do
-      echo "docker pull ${IMG_PATH}${img}:${ACP_VERSION}"
-      docker pull ${IMG_PATH}${img}:${ACP_VERSION}
+      echo "docker pull ${RBD_PATH}${img}"
+      if [ "$img" = "prom/prometheus:v2.0.0" ];then
+        docker pull $img
+      else
+        docker pull ${RBD_PATH}${img}
+      fi
     done
 
     for img in $OTHER_MODULES $ARCHIVER_IMG
@@ -26,23 +30,26 @@ function pull_images(){
     done  
   fi
 }
-
+# =====================================
 # save images
 function save_images(){
   read -p $'\e[32mSave images?\e[0m (y|n): ' SAVE_IMGS
   if [ "$SAVE_IMGS" == "Y" -o "$SAVE_IMGS" == "y" ];then
-  for img in $ACP_MODULES
+  for img in $ACP_MODULES $RBD_OTHER_MODULES
   do
     echo "check image and tag package"
-    img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
-    tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
+    # img_id=`docker images -q ${IMG_PATH}${img}:${ACP_VERSION}`
+    # tgz_id=`cat ${IMG_DIR}/${img}_${ACP_VERSION}.id 2>/dev/null`
+    img_id=`docker images -q ${RBD_PATH}${img}`
+    tgz_id=`cat ${IMG_DIR}/${img}.id 2>/dev/null`
+    img_tag=`echo ${img}|sed 's/:/_/'`
     if [ "$img_id" != "$tgz_id" ];then
-      echo "docker save ${IMG_PATH}${img}:${ACP_VERSION}"
-      docker save ${IMG_PATH}${img}:${ACP_VERSION} | gzip > ${IMG_DIR}/${img}_${ACP_VERSION}.gz \
-      && md5sum acpimg/${img}_${ACP_VERSION}.gz > ${IMG_DIR}/${img}_${ACP_VERSION}.md5 \
-      && echo $img_id > ${IMG_DIR}/${img}_${ACP_VERSION}.id
+      echo "docker save ${RBD_PATH}${img}"
+      docker save ${RBD_PATH}${img} | gzip > ${IMG_DIR}/${img_tag}.gz \
+      && md5sum acpimg/${img_tag}.gz > ${IMG_DIR}/${img_tag}.md5 \
+      && echo $img_id > ${IMG_DIR}/${img_tag}.id
     else
-      echo -e "Image: \e[31m${img}:${ACP_VERSION}\e[0m,Compressed package:\e[32m${img}_${ACP_VERSION}.gz\e[0m has been saved and skipped."
+      echo -e "Image: \e[31m${img}\e[0m,Compressed package:\e[32m${img_tag}.gz\e[0m has been saved and skipped."
     fi
   done
 
