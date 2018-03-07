@@ -26,12 +26,12 @@ function manage_opt(){
   # install docker
   /bin/bash $PWD/tools/docker_install.sh
 
-  # setup registry
-  /bin/bash $PWD/tools/setup_http_server.sh
-
   # prepare images
   /bin/bash $PWD/tools/prepare_images.sh load manage
   #/bin/bash $PWD/tools/prepare_images.sh push
+
+  # setup registry
+  /bin/bash $PWD/tools/setup_http_server.sh
 
 }
 
