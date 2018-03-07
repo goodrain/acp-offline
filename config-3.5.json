@@ -63,5 +63,6 @@
                     "iproute",
                     "rsync",
                     "lvm2",
+                    "mariadb",
                     "bash-completion"]
     }

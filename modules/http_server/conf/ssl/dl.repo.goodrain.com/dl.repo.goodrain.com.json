@@ -1,0 +1,6 @@
+{
+	"domain": "dl.repo.goodrain.com",
+	"certUrl": "https://acme-v01.api.letsencrypt.org/acme/cert/03a5d1e91168a017ab936f3e278bbdbcd456",
+	"certStableUrl": "",
+	"accountRef": "https://acme-v01.api.letsencrypt.org/acme/reg/30369681"
+}

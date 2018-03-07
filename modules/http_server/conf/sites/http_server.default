@@ -1,0 +1,69 @@
+# repo.goodrain.com
+server {
+    listen       172.30.42.100:443;
+    server_name  repo.goodrain.com;
+    root         __RBD_ROOT__/gaops;
+    index index.html;
+
+    ssl          on;
+    ssl_certificate ssl/goodrain.com/goodrain.com.crt;
+    ssl_certificate_key ssl/goodrain.com/goodrain.com.key;
+
+    location /release/__RBD_VERSION__/gaops {
+        alias __RBD_ROOT__/gaops;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen       172.30.42.100:80;
+    server_name  repo.goodrain.com;
+    root         __RBD_ROOT__/gaops;
+    index index.html;
+
+    location /release/__RBD_VERSION__/gaops {
+        alias __RBD_ROOT__/gaops;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+# dl.repo.goodrain.com
+server {
+    listen       172.30.42.100:443;
+    server_name  dl.repo.goodrain.com;
+    root         __RBD_ROOT__/packages;
+    index index.html;
+
+    ssl          on;
+    ssl_certificate     ssl/dl.repo.goodrain.com/dl.repo.goodrain.com.crt;
+    ssl_certificate_key ssl/dl.repo.goodrain.com/dl.repo.goodrain.com.key;
+
+    location /releases/download/ {
+        alias __RBD_ROOT__/packages/;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen       172.30.42.100:80;
+    server_name  dl.repo.goodrain.com;
+    root         __RBD_ROOT__/packages;
+    index index.html;
+
+    location /releases/download/ {
+        alias __RBD_ROOT__/packages/;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
