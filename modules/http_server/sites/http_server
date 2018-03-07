@@ -41,8 +41,8 @@ server {
     index index.html;
 
     ssl          on;
-    ssl_certificate ssl/goodrain.com/goodrain.com.crt;
-    ssl_certificate_key ssl/goodrain.com/goodrain.com.key;
+    ssl_certificate     ssl/dl.repo.goodrain.com/dl.repo.goodrain.com.crt;
+    ssl_certificate_key ssl/dl.repo.goodrain.com/dl.repo.goodrain.com.key;
 
     location /releases/download/ {
         alias /mnt/packages/;

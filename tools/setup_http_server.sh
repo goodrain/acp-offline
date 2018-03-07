@@ -14,7 +14,7 @@ if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
   docker rm http_server
   # copy ssl key
   [ ! -d /etc/goodrain/http_server/ssl/ ] && mkdir -pv /etc/goodrain/http_server/ssl/
-  cp -rp $PWD/modules/http_server/ssl/goodrain.com /etc/goodrain/http_server/ssl/
+  cp -rp $PWD/modules/http_server/ssl/* /etc/goodrain/http_server/ssl/
 
   # copy hub config
   [ ! -d /etc/goodrain/http_server/sites/ ] && mkdir -pv /etc/goodrain/http_server/sites/
