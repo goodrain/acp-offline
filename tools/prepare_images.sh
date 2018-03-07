@@ -82,24 +82,24 @@ function load_images(){
       #   fi
       # done
 
-      for other_img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
+      for img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
       do
-        other_img_tag=`echo ${other_img}|sed 's/:/_/'`
-        img_id=`docker images -q ${IMG_PATH}${other_img}`
-        tgz_id=`cat ${IMG_DIR}/${other_img_tag}.id`
+        img_tag=`echo ${img}|sed 's/:/_/'`
+        img_id=`docker images -q ${IMG_PATH}${img}`
+        tgz_id=`cat ${IMG_DIR}/${img_tag}.id`
         
         if [ "$img_id" != "$tgz_id" ];then
-          echo "Check ${img}:${ACP_VERSION}..."
-          md5sum -c ${IMG_DIR}/${other_img_tag}.md5 > /dev/null 2>&1
+          echo "Check ${img}..."
+          md5sum -c ${IMG_DIR}/${img_tag}.md5 > /dev/null 2>&1
           if [ $? -eq 0 ];then
-            echo "docker load ${IMG_PATH}${other_img}"
-            cat ${IMG_DIR}/${other_img_tag}.gz | docker load
+            echo "docker load ${IMG_PATH}${img}"
+            cat ${IMG_DIR}/${img_tag}.gz | docker load
           else
-            echo -e "${IMG_PATH}${other_img_tag}.gz checksum \e[31mdid NOT\e[0m match"
+            echo -e "${IMG_PATH}${img_tag}.gz checksum \e[31mdid NOT\e[0m match"
             break;
           fi
         else
-          echo "${IMG_PATH}${other_img} already loaded."
+          echo "${IMG_PATH}${img} already loaded."
         fi
       done
     elif [ "$role" == "compute" ];then
