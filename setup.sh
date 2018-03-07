@@ -5,11 +5,11 @@
 
 function public_opt(){
   clear
-  # check system
-  check
-
   # config repo
   config_mirrors
+
+  # check system
+  check
 
   # make docker storage
   make_storage
