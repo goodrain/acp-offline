@@ -27,7 +27,7 @@ function manage_opt(){
   /bin/bash $PWD/tools/docker_install.sh
 
   # setup registry
-  # /bin/bash $PWD/tools/setup_registry.sh
+  /bin/bash $PWD/tools/setup_http_server.sh
 
   # prepare images
   /bin/bash $PWD/tools/prepare_images.sh load manage
@@ -60,7 +60,7 @@ case $1 in
 manage)
   public_opt \
   && manage_opt \
-  && $PWD/install/${ACP_VERSION}/start.sh 
+  && $PWD/install/${ACP_VERSION}/start.sh
 #  && $PWD/tools/post_install.sh
   ;;
 compute)
