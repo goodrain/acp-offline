@@ -60,7 +60,7 @@ case $1 in
 manage)
   public_opt \
   && manage_opt \
-  && $PWD/install/init/install.sh local \
+  && $PWD/install/${ACP_VERSION}/start.sh local \
   && $PWD/tools/post_install.sh
   ;;
 compute)
