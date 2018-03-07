@@ -20,6 +20,9 @@ function public_opt(){
 
 
 function manage_opt(){
+  # Setup Wild sub domain
+  setup_domain
+
   # modify hosts
   /bin/bash $PWD/tools/modify_hosts.sh manage
 

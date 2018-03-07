@@ -56,7 +56,7 @@ function check(){
     echo -e "\e[32minit system for rainbond...\e[0m\n"
     [ ! -d /etc/goodrain ] && mkdir -pv /etc/goodrain
     echo -e "{\n\"install_type\":\"local\",\n\"time\":\"`date +'%F %H:%M:%S'`\"\n}" > /etc/goodrain/.config.json
-    
+
     # init docker config
     mkdir -pv ~/.docker
     [ ! -f ~/.docker/config.json ] && echo "{}" > ~/.docker/config.json
@@ -103,6 +103,16 @@ function check(){
         if [[ "$?" -eq 0 ]];then
             echo ""
         fi
+    fi
+}
+
+function setup_domain(){
+    [ ! -d /data ] && mkdir /data
+    read -p "Please input apps sub domain just like ( docker.demo.com ): " SUB_DOMAIN
+    if [ -z $SUB_DOMAIN ];then
+        echo "docker.demo.com" > /data/.domain.log
+    else
+        echo $SUB_DOMAIN > /data/.domain.log
     fi
 }
 
