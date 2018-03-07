@@ -133,7 +133,7 @@ EOF
             yum makecache
 
             echo "Install the system prerequisite package..."
-            yum install -y perl telnet bind-utils htop dstat mariadb net-tools lsof iproute rsync lvm2
+            yum install -y $DEFAULT_RPMS
         fi
     else
         if [[ $RELEASE_INFO == '7' ]];then

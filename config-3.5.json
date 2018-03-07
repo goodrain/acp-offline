@@ -47,7 +47,6 @@
     "default_rpms":["nfs-utils",
                     "wget",
                     "curl",
-                    "epel-release",
                     "jq",
                     "tar",
                     "git",
