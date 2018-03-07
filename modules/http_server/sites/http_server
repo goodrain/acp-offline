@@ -9,7 +9,22 @@ server {
     ssl_certificate ssl/goodrain.com/goodrain.com.crt;
     ssl_certificate_key ssl/goodrain.com/goodrain.com.key;
 
-    location /release/__RBD_VERSION__/ {
+    location /release/__RBD_VERSION__/gaops {
+        alias /mnt/gaops/;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen       172.30.42.100:80;
+    server_name  repo.goodrain.com;
+    root         /mnt/gaops;
+    index index.html;
+
+    location /release/__RBD_VERSION__/gaops {
         alias /mnt/gaops/;
     }
 
@@ -38,3 +53,17 @@ server {
     }
 }
 
+server {
+    listen       172.30.42.100:80;
+    server_name  dl.repo.goodrain.com;
+    root         /mnt/packages;
+    index index.html;
+
+    location /releases/download/ {
+        alias /mnt/packages/;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
