@@ -6,6 +6,7 @@ grdata
 repo-old
 repo
 rbdimg
+packages
 app_publish
 tools/download_rpms.sh
 tools/generate_file_list.sh

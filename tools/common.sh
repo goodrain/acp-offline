@@ -55,7 +55,6 @@ function check(){
 
     echo -e "\e[32minit system for rainbond...\e[0m\n"
     [ ! -d /etc/goodrain ] && mkdir -pv /etc/goodrain
-    [ ! -d /opt/goodrain/start ] && mkdir -pv /opt/goodrain/start && ln -s $PWD/gaops/
     echo -e "{\n\"install_type\":\"local\",\n\"time\":\"`date +'%F %H:%M:%S'`\"\n}" > /etc/goodrain/.config.json
     
     # init docker config
