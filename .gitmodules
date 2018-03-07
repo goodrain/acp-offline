@@ -1,0 +1,6 @@
+[submodule "install"]
+	path = install
+	url = http://code.goodrain.com/acp/install.git
+[submodule "gaops"]
+	path = gaops
+	url = http://code.goodrain.com/goodrain/gaops.git
