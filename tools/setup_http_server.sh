@@ -11,8 +11,10 @@ if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
 
   if [ -f /usr/local/nginx ];then
      rm -rf /usr/local/nginx
-     ln -s $PWD/modules/http_server /usr/local/nginx
   fi
+
+  ln -s $PWD/modules/http_server /usr/local/nginx
+
   echo /usr/local/nginx/lib >> /etc/ld.so.conf && ldconfig
 
   \cp -rp $PWD/modules/http_server/conf/sites/http_server.default $PWD/modules/http_server/conf/sites/http_server.conf

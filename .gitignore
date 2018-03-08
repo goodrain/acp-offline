@@ -4,7 +4,8 @@ appimg
 acpimg-old
 grdata
 repo-old
-repo
+repo*
+modules/http_server/logs/*
 rbdimg
 packages
 app_publish
