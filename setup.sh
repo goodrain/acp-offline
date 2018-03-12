@@ -16,6 +16,9 @@ function public_opt(){
 
   # limit container swap
   config_grub
+
+  # add execute permissions
+  add_permission
 }
 
 

@@ -117,11 +117,10 @@ function setup_domain(){
 }
 
 function config_mirrors(){
-    if [ "$INSTALL_TYPE" == "local" ];then
-        if [ ! -f /etc/yum.repos.d/acp.repo ];then
+    read -p $'\e[32mReconfigure yum mirror?\e[0m (y|n): ' isOK
+        if [ "$isOK" == "Y" -o "$isOK" == "y" ];then
             yum clean all \
             && rm -rf /etc/yum.repos.d/*
-
             cat >/etc/yum.repos.d/acp.repo <<EOF
 [acp-local]
 name=local
@@ -129,37 +128,12 @@ baseurl=file://$PWD/repo
 enabled=1
 gpgcheck=0
 EOF
-
-            yum makecache
-
-            echo "Install the system prerequisite package..."
-            yum install -y $DEFAULT_RPMS
-        fi
-    else
-        if [[ $RELEASE_INFO == '7' ]];then
-            echo -e "\e[32mConfigure yum repo...\e[0m"
-            cat >/etc/yum.repos.d/acp.repo <<EOF
-[goodrain]
-name=goodrain CentOS-\$releasever - for x86_64
-baseurl=http://repo.goodrain.com/centos/\$releasever/${REPO_VERSION}/\$basearch
-enabled=1
-gpgcheck=1
-gpgkey=http://repo.goodrain.com/gpg/RPM-GPG-KEY-CentOS-goodrain
-EOF
-            yum makecache \
-            && yum install -y lsof htop rsync net-tools telnet iproute
-        else
-            echo -e "\e[32mConfigure apt sources.list...\e[0m"
-            if [[ $RELEASE_INFO =~ '16' ]];then
-                echo deb http://repo.goodrain.com/ubuntu/16.04 ${REPO_VERSION} main | tee /etc/apt/sources.list.d/acp.list 
-            else
-                echo deb http://repo.goodrain.com/ubuntu/14.04 ${REPO_VERSION} main | tee /etc/apt/sources.list.d/acp.list                 
-            fi
-            curl http://repo.goodrain.com/gpg/goodrain-C4CDA0B7 2>/dev/null | apt-key add - \
-            && apt-get update || apt update \
-            && apt-get install  -y lsof htop rsync net-tools telnet iproute lvm2 || apt install  -y lsof htop rsync net-tools telnet iproute lvm2
-        fi
-    fi
+    yum makecache
+    echo "Install the system prerequisite package..."
+    yum install -y $DEFAULT_RPMS
+else
+    yum install -y $DEFAULT_RPMS
+fi
 }
 
 function make_storage(){    
@@ -220,4 +194,10 @@ function config_grub(){
             grub-mkconfig -o /boot/grub/grub.cfg
         fi
     fi
+}
+
+function add_permission(){
+    start_path="$PWD/install/$ACP_VERSION/start.sh"
+    sql_path="$PWD/modules/rbd_db/sql/import_sql.sh"
+    chmod +x $start_path $sql_path $PWD/tools/*
 }
