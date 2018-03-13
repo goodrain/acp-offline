@@ -5,7 +5,6 @@ rbdimg-3.4.2
 grdata
 repo-old
 repo*
-modules/http_server/logs/*
 rbdimg
 packages
 app_publish
@@ -13,3 +12,4 @@ tools/download_rpms.sh
 tools/generate_file_list.sh
 tools/process_app_image.sh
 tools/upload_oss.sh
+tools/repo_list.ls-old
