@@ -27,6 +27,7 @@ function save_images(){
   if [ "$SAVE_IMGS" == "Y" -o "$SAVE_IMGS" == "y" ];then
   for img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
   do
+  if [[ "$img" =~ "3.5" ]];then
     img_tag=`echo ${img}|sed 's/:/_/'`
     echo "check image and tag package..."
     img_id=`docker images -q ${IMG_PATH}${img}`
@@ -39,6 +40,7 @@ function save_images(){
     else
       echo -e "Image: \e[31m${img}\e[0m,Compressed package:\e[32m${img_tag}.gz\e[0m has been saved and skipped."
     fi
+  fi
   done
   fi
 }

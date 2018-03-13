@@ -20,5 +20,6 @@ do
     && echo "$app_img_id" > $BAK_PATH/$img_save_name.id \
     && docker rmi ${APP_DOMAIN}/${app_name}
   fi
+  sleep 10000
 done < $APP_FILE
 

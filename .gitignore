@@ -1,7 +1,7 @@
 appimg
 *.bak
 .DS_Store
-acpimg-old
+rbdimg-3.4.2
 grdata
 repo-old
 repo*
