@@ -29,23 +29,21 @@ function pull_images(){
 function save_images(){
   read -p $'\e[32mSave images?\e[0m (y|n): ' SAVE_IMGS
   if [ "$SAVE_IMGS" == "Y" -o "$SAVE_IMGS" == "y" ];then
-  for img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
-  do
-  if [[ "$img" =~ "3.5" ]];then
-    img_tag=`echo ${img}|sed 's/:/_/'`
-    echo "check image and tag package..."
-    img_id=`docker images -q ${IMG_PATH}${img}`
-    tgz_id=`cat ${IMG_DIR}/${img_tag}.id 2>/dev/null`
-    if [ "$img_id" != "$tgz_id" ];then
-      echo "docker save ${IMG_PATH}${img}"
-      docker save ${IMG_PATH}${img} | gzip > ${IMG_DIR}/${img_tag}.gz \
-      && md5sum rbdimg/${img_tag}.gz > ${IMG_DIR}/${img_tag}.md5 \
-      && echo $img_id > ${IMG_DIR}/${img_tag}.id
-    else
-      echo -e "Image: \e[31m${img}\e[0m,Compressed package:\e[32m${img_tag}.gz\e[0m has been saved and skipped."
-    fi
-  fi
-  done
+    for img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
+    do
+      img_tag=`echo ${img}|sed 's/:/_/'`
+      echo "check image and tag package..."
+      img_id=`docker images -q ${IMG_PATH}${img}`
+      tgz_id=`cat ${IMG_DIR}/${img_tag}.id 2>/dev/null`
+      if [ "$img_id" != "$tgz_id" ];then
+        echo "docker save ${IMG_PATH}${img}"
+        docker save ${IMG_PATH}${img} | gzip > ${IMG_DIR}/${img_tag}.gz \
+        && md5sum rbdimg/${img_tag}.gz > ${IMG_DIR}/${img_tag}.md5 \
+        && echo $img_id > ${IMG_DIR}/${img_tag}.id
+      else
+        echo -e "Image: \e[31m${img}\e[0m,Compressed package:\e[32m${img_tag}.gz\e[0m has been saved and skipped."
+      fi
+    done
   fi
 }
 
