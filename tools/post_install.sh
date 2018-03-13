@@ -20,6 +20,9 @@ echo -ne "\e[32mStoping temporary service...\e[0m"
 # remove temporary files
 echo -ne "\e[32mRemoving temporary files...\e[0m"
 rm -rf /usr/local/nginx
+rm -rf modules/http_server/conf/sites/http_server.conf
+rm -rf modules/http_server/logs/*
+rm -rf modules/http_server/*_temp
 
 # add proxy server key
 echo -ne "\e[32mAdding proxy server key...\e[0m"
