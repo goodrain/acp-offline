@@ -13,15 +13,20 @@ function download_rpm(){
   if [ "$rpms" == "default" ];then
   {
     echo -e "download [\e[32m$default_rpms\e[0m] into local repo."
-    yum install -y $DEFAULT_RPMS --downloadonly --downloaddir=$PWD/repo  && \
-    createrepo --update  -pdo $REPO_PATH $REPO_PATH
+    yum install -y $DEFAULT_RPMS --downloadonly --downloaddir=$PWD/repo
   }
   else
   {
     echo "download [\e[32m$rpms\e[0m] into local repo."
-    yum install -y $rpms --downloadonly --downloaddir=$PWD/repo  && \
-    createrepo --update  -pdo $REPO_PATH $REPO_PATH
+    yum install -y $rpms --downloadonly --downloaddir=$PWD/repo
   }
+  fi
+
+  if [ ! $(which  createrepo 2>/dev/null) ];then
+    yum install repo/createrepo* -y && \
+    createrepo --update  -pdo $REPO_PATH $REPO_PATH
+  else
+    createrepo --update  -pdo $REPO_PATH $REPO_PATH
   fi
 }
 
