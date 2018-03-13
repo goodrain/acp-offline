@@ -1,12 +1,12 @@
 #!/bin/bash
 
-OSS_DOMAIN="http://pkg.goodrain.com"
-OSS_PATH="acp/offline"
+OSS_DOMAIN="https://dl.repo.goodrain.com"
+OSS_PATH="releases/offline"
 REPO_DIR="$PWD/repo"
-ACPIMG_DIR="$PWD/acpimg"
+ACPIMG_DIR="$PWD/rbdimg"
 
 REPO_LIST_FILE="$PWD/tools/repo_list.ls"
-ACP_IMG_LIST_FILE="$PWD/tools/acp_img_list.ls"
+ACP_IMG_LIST_FILE="$PWD/tools/rbd_img_list.ls"
 
 function download_repo(){
     [ ! -d $REPO_DIR ] && mkdir -pv $REPO_DIR
@@ -64,4 +64,4 @@ function download_acpimg(){
 # --- main -------
 download_repo
 
-download_acpimg
+#download_acpimg
