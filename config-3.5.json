@@ -64,5 +64,6 @@
                     "rsync",
                     "lvm2",
                     "mariadb",
+                    "createrepo",
                     "bash-completion"]
     }
