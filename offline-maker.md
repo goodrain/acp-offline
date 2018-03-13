@@ -25,15 +25,16 @@ jq .version config.json
 ./tools/prepare_images.sh save
 ```
 
-### 1.3 下载最新的rpm包
+### 1.3 下载最新安装包
+
+```bash
+ossutil cp oss://rainbond-pkg/releases/download/ packages -r -f -u
+```
+
+### 1.4 下载最新的rpm包
 
 ```bash
 ./tools/download_rpms.sh default
-```
-
-### 1.4 下载最新安装包
-```bash
-ossutil cp oss://rainbond-pkg/releases/download packages -r -f -u
 ```
 
 

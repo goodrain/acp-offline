@@ -14,6 +14,10 @@ function download_rpm(){
   {
     echo -e "download [\e[32m$default_rpms\e[0m] into local repo."
     yum install -y $DEFAULT_RPMS --downloadonly --downloaddir=$PWD/repo
+    
+    echo "Prepare docker rpms"
+    tar xzvf $PWD/packages/releases/download/docker/v1.12.6/docker.tgz -C $PWD/repo/ --strip-components=1
+    rm -rf $PWD/repo/*.deb
   }
   else
   {
