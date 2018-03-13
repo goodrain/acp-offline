@@ -31,6 +31,10 @@ jq .version config.json
 ./tools/download_rpms.sh default
 ```
 
+### 1.4 下载最新安装包
+```bash
+ossutil cp oss://rainbond-pkg/ packages -r -f -u
+```
 
 
 ## 二、将更新的镜像包上传到阿里oss
@@ -40,4 +44,3 @@ jq .version config.json
 # 镜像文件会自动与远程oss文件进行比较，不一致才上传，repo文件进行更新覆盖上传
 ./tools/upload_oss.sh
 ```
-
