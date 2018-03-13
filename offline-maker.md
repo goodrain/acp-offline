@@ -33,7 +33,7 @@ jq .version config.json
 
 ### 1.4 下载最新安装包
 ```bash
-ossutil cp oss://rainbond-pkg/releases/download/ download -r -f -u
+ossutil cp oss://rainbond-pkg/ packages -r -f -u
 ```
 
 

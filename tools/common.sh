@@ -131,8 +131,6 @@ EOF
     yum makecache
     echo "Install the system prerequisite package..."
     yum install -y $DEFAULT_RPMS
-else
-    yum install -y $DEFAULT_RPMS
 fi
 }
 

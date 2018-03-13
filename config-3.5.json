@@ -65,5 +65,7 @@
                     "lvm2",
                     "mariadb",
                     "createrepo",
+                    "libtool-ltdl",
+                    "libseccomp",
                     "bash-completion"]
     }
