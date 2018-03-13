@@ -1,5 +1,6 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 OSS_DOMAIN="http://pkg.goodrain.com"
 OSS_PATH="releases/offline"
 REPO_DIR="$PWD/repo"
@@ -7,6 +8,15 @@ RBDIMG_DIR="$PWD/rbdimg"
 
 REPO_LIST_FILE="$PWD/tools/repo_list.ls"
 RBD_IMG_LIST_FILE="$PWD/tools/rbd_img_list.ls"
+=======
+OSS_DOMAIN="https://dl.repo.goodrain.com"
+OSS_PATH="releases/offline"
+REPO_DIR="$PWD/repo"
+ACPIMG_DIR="$PWD/rbdimg"
+
+REPO_LIST_FILE="$PWD/tools/repo_list.ls"
+ACP_IMG_LIST_FILE="$PWD/tools/rbd_img_list.ls"
+>>>>>>> 442edba3145ab1f8fd196c4465ddc0ea7942a02a
 
 function download_repo(){
     [ ! -d $REPO_DIR ] && mkdir -pv $REPO_DIR
@@ -47,4 +57,8 @@ function download_rbdimg(){
 # --- main -------
 download_repo
 
+<<<<<<< HEAD
 download_rbdimg
+=======
+#download_acpimg
+>>>>>>> 442edba3145ab1f8fd196c4465ddc0ea7942a02a
