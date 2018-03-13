@@ -13,6 +13,10 @@ function pull_images(){
   fi
 
   if [ "$PULL_IMGS" == "Y" -o "$PULL_IMGS" == "y" ];then
+    if [ $(systemctl  is-active docker) != "active" ];then
+       systemctl start docker
+    fi
+
     for img in $ACP_MODULES $OTHER_MODULES $ARCHIVER_IMG
     do
       echo "docker pull ${IMG_PATH}${img}"
