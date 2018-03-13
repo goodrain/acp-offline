@@ -36,4 +36,4 @@ cclear
 systemctl restart docker
 dc-compose up -d
 
-\cp $PWD/tools/chaos_config.json /etc/goodrain/etc/chaos/config.json 
+#\cp $PWD/tools/chaos_config.json /etc/goodrain/etc/chaos/config.json 

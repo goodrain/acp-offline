@@ -8,6 +8,7 @@ repo*
 modules/http_server/logs/*
 rbdimg
 packages
+download
 app_publish
 tools/download_rpms.sh
 tools/generate_file_list.sh
