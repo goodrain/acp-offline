@@ -6,6 +6,7 @@ grdata
 repo-old
 repo*
 modules/http_server/logs/*
+modules/http_server/http_server
 rbdimg
 packages
 download
