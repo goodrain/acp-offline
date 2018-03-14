@@ -6,7 +6,7 @@ cp -rp $PWD/grdata/build/lang-env/* /grdata/build/lang-env/ && echo OK
 #cp -rp $PWD/app_publish  /grdata/build/tenant/ && echo OK 
 
 # import sql data
-echo "\e[32mImport sql data...\e[0m"
+echo "\e[32mImporting sql data...\e[0m"
 $PWD/modules/rbd_db/sql/import_sql.sh
 
 # copy acp_proxy
